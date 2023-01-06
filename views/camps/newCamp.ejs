@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add New Camp</title>
+</head>
+<body>
+    <h1>Add New Camp</h1>
+    <form action="/camps" method="post">
+        <label for="title">Enter Title: </label>
+        <input type="text" required id="title" placeholder="Enter Name" name="title">
+        <label for="description">Enter Description: </label>
+        <input type="text" required id="description" placeholder="Enter Description" name="description">
+        <label for="location">Enter Location: </label>
+        <input type="text" required id="location" placeholder="Enter Location" name="location">
+        <button type="submit">Submit</button>
+    </form>
+</body>
+</html>
