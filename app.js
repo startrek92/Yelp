@@ -2,6 +2,7 @@ const express = require('express');
 const path = require('path');
 const methodOverride = require('method-override')
 const CampGround = require('./models/campGround');
+const ejsMate = require('ejs-mate');
 
 
 // Connect DB
@@ -18,6 +19,9 @@ mongoose.connect('mongodb://127.0.0.1:27017/yelp-camp', { useNewUrlParser: true,
 
 const app = express();
 
+// set ejsMate as ejs engine
+app.engine('ejs', ejsMate);
+
 // allow express routes to parse data from form and JSON
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
@@ -25,6 +29,8 @@ app.use(express.json());
 // setting view engine as EJS
 app.set('view engine', 'ejs');
 app.set('views'), path.join(__dirname, '/views')
+
+
 
 // allow forms to send PUT DELETE HTTP Request
 app.use(methodOverride('_method'));
@@ -76,6 +82,7 @@ app.delete('/camps/:id', async (req, res) => {
 app.get('/camps/:id/edit', async (req, res) => {
     const { id } = req.params;
     const camp = await CampGround.findById(id);
+    console.log(camp);
     res.render('./camps/edit', { camp });
 })
 
