@@ -3,7 +3,9 @@ const path = require('path');
 const methodOverride = require('method-override')
 const CampGround = require('./models/campGround');
 const ejsMate = require('ejs-mate');
-
+const { campValidator } = require('./utils/schemaValidator');
+const CustomError = require('./utils/customError');
+const asyncErrorHandler = require('./utils/asyncErrorHandler');
 
 // Connect DB
 const mongoose = require('mongoose');
@@ -35,55 +37,83 @@ app.set('views'), path.join(__dirname, '/views')
 // allow forms to send PUT DELETE HTTP Request
 app.use(methodOverride('_method'));
 
-app.get('/', (req, res) => {
-    res.render('./home');
-})
+const validateCampData = (req, res, next) => {
+    const { error } = campValidator.validate(req.body);
+    if (error) {
+        const msg = error.details.map(e => e.message).join(',');
+        throw next(new CustomError(msg, 400));
+    } else {
+        next();
+    }
+}
 
-app.get('/camps', async (req, res) => {
+
+app.get('/', ((req, res) => {
+    res.render('./home');
+}))
+
+app.get('/camps', asyncErrorHandler(async (req, res) => {
     const camps = await CampGround.find({});
     // console.log(camps);
     res.render('./camps/index', { camps });
-})
+}))
 
 //remember to add names in input ejs template
-app.post('/camps', async (req, res) => {
+app.post('/camps', validateCampData, asyncErrorHandler(async (req, res) => {
     const data = req.body;
-    const newCamp = new CampGround(req.body);
-    newCamp.save();
-    console.log(newCamp);
+    // console.log(`POST /camps ${data}`);
+    const newCamp = new CampGround(req.body.camp);
+    await newCamp.save();
+    // console.log(newCamp);
     res.redirect(`/camps/${newCamp._id}`);
-})
+    // res.send('Camp Data Validation Successful')
+}))
 
-app.get('/camps/new', (req, res) => {
+app.get('/camps/new', ((req, res) => {
     res.render('./camps/newCamp');
-})
+}))
 
-app.get('/camps/:id', async (req, res) => {
-    const { id } = req.params;
-    const camp = await CampGround.findById(id);
-    res.render('./camps/view', { camp });
-})
-
-app.patch('/camps/:id', async (req, res) => {
-    const { id } = req.params;
-    // const camp = await CampGround.findById(id);
-    // console.log(camp);
-    const camp = await CampGround.findByIdAndUpdate(id, req.body);
-    res.redirect(`/camps/${camp._id}`);
-})
-
-app.delete('/camps/:id', async (req, res) => {
-    const {id} = req.params;
-    const deletedCamp = await CampGround.findByIdAndDelete(id);
-    console.log(deletedCamp);
-    res.redirect('/camps');
-})
-
-app.get('/camps/:id/edit', async (req, res) => {
+app.get('/camps/:id/edit', asyncErrorHandler(async (req, res) => {
     const { id } = req.params;
     const camp = await CampGround.findById(id);
     console.log(camp);
     res.render('./camps/edit', { camp });
+}))
+
+app.get('/camps/:id', asyncErrorHandler(async (req, res) => {
+    const { id } = req.params;
+    const camp = await CampGround.findById(id);
+    res.render('./camps/view', { camp });
+}))
+
+app.patch('/camps/:id', validateCampData, asyncErrorHandler(async (req, res, next) => {
+    // console.log('/PATCH Request');
+    // console.log(req);
+    const { id } = req.params;
+    const camp = await CampGround.findByIdAndUpdate(id, req.body.camp);
+    if (!camp) {
+        next(new CustomError(`Camp Not Found. ID - ${id}`, 400));
+    } else {
+        res.redirect(`/camps/${camp._id}`);
+    }
+}))
+
+app.delete('/camps/:id', asyncErrorHandler(async (req, res) => {
+    const { id } = req.params;
+    const deletedCamp = await CampGround.findByIdAndDelete(id);
+    console.log(deletedCamp);
+    res.redirect('/camps');
+}))
+
+app.all('*', (req, res, next) => {
+    next(new CustomError("Page Not Found", 500));
+})
+
+app.use((err, req, res, next) => {
+    console.log('in error');
+    console.log(err);
+    const { message = 'Page Not Found', statusCode = 500 } = err;
+    res.status(statusCode).render('./error', { err });
 })
 
 app.listen(3000, () => {

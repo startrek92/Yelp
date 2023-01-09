@@ -1,15 +1,32 @@
 <% layout('./layouts/template') %>
-    <h1>
-        <%= camp.title %>
-    </h1>
-    <img src="<%= camp.image %>" alt="Camp Image">
-    <h4>
-        <%= camp.price%>,<%= camp.description%> 
-    </h4>
-    <h4> <%= camp.location %></h4>
-    <a href="/camps/<%= camp.id %>/edit">Edit Camp Ground</a>
-    <a href="/camps">All Camp Ground</a>
-    <form action="/camps/<%= camp._id %>?_method=DELETE" method="POST">
-        <button type="submit">Delete</button>
-    </form>
-    
+    <div class="row mb-2">
+        <div class="col-8 offset-2">
+            <div class="card">
+                <img class="card-img-top" src="<%= camp.image %> " alt="Card image cap">
+                <div class="card-body">
+                    <h5 class="card-title">
+                        <%= camp.title %>
+                    </h5>
+                    <p class="card-text">
+                        <%= camp.description %>
+                    </p>
+                </div>
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item text-muted">
+                        <%= camp.location %>
+                    </li>
+                    <li class="list-group-item">$<%= camp.price %>/Night</li>
+                </ul>
+                <div class="card-footer text-muted">
+                    2 days ago
+                </div>
+                <div class="card-body">
+                    <form class="d-inline" action="/camps/<%= camp._id %>?_method=DELETE" method="POST">
+                        <button class="btn btn-danger" type="submit">Delete</button>
+                    </form>
+                    <a href="/camps/<%= camp._id%>/edit" class="btn btn-info mx-2">Update</a>
+                    <a href="/camps" class="btn btn-success">All Camps</a>
+                </div>
+            </div>
+        </div>
+    </div>

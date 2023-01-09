@@ -1,33 +1,40 @@
 <% layout('./layouts/template') %>
     <div class="row">
+        <div class="alert alert-warning" role="alert">
+            This is test app. Use valid image URL.
+            Ex:https://picsum.photos/300
+        </div>
         <h1 class="text-center">Add New Camp Ground</h1>
         <div class="col-6 offset-3">
             <form action="/camps" method="post">
                 <div class="mb-3">
-                    <label class="form-label" for="title">Enter Title: </label>
-                    <input class="form-control" type="text" required id="title" placeholder="Enter Name" name="title">
+                    <label class="form-label" for="title">Enter Title</label>
+                    <input class="form-control" type="text" required id="title" placeholder="Enter Name"
+                        name="camp[title]">
                 </div>
-                <div class="mb-3">
-                    <label class="form-label" for="location">Enter Location: </label>
-                    <input class="form-control" type="text" required id="location" placeholder="Enter Location"
-                        name="location">
-                </div>
-                <div class="mb-3">
-                    <label class="form-label" for="price">CampGround Price </label>
-                    <div class="input-group">
-                        <span class="input-group-text">$</span>
-                        <input type="number" class="form-control" placeholder="0.00" name="price" id="price">
+                <div class="row">
+                    <div class="col-lg-7 col-mg-12 mb-3">
+                        <label class="form-label" for="location">Enter Location</label>
+                        <input class="form-control" type="text" required id="location" placeholder="Enter Location"
+                            name="camp[location]">
+                    </div>
+                    <div class="col-lg-5 col-mg-12 mb-3">
+                        <label class="form-label" for="price">CampGround Price</label>
+                        <div class="input-group">
+                            <span class="input-group-text">$</span>
+                            <input type="number" class="form-control" placeholder="0.00" name="camp[price]" id="price">
+                        </div>
                     </div>
                 </div>
                 <div class="mb-3">
-                    <label class="form-label" for="image">Image URL </label>
+                    <label class="form-label" for="image">Image URL</label>
                     <input class="form-control" type="text" required id="image" placeholder="Enter Image URL"
-                        name="image">
+                        name="camp[image]">
                 </div>
                 <div class="mb-3">
-                    <label class="form-label" for="description">Enter Description: </label>
+                    <label class="form-label" for="description">Enter Description</label>
                     <textarea class="form-control" type="text" required id="description" placeholder="Enter Description"
-                        name="description"></textarea>
+                        name="camp[description]"></textarea>
                 </div>
                 <div class="mb-3">
                     <button class="btn btn-primary" type="submit">Submit</button>

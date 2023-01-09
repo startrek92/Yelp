@@ -31,7 +31,7 @@ const seedDB = async () => {
             price: price,
             description: desc,
             location: `${cities[loc].city}, ${cities[loc].state}`,
-            image: `https://source.unsplash.com/collection/9779473`
+            image: `https://picsum.photos/300`
         })
         await camp.save();
     }
