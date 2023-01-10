@@ -3,28 +3,37 @@
         <div class="alert alert-warning" role="alert">
             This is test app. Use valid image URL.
             Ex:https://picsum.photos/300
-          </div>
+        </div>
         <h1 class="text-center">Update <%= camp.title %>
         </h1>
         <div class="col-6 offset-3">
-            <form action="/camps/<%= camp._id %>?_method=PATCH" method="post">
+            <form action="/camps/<%= camp._id %>?_method=PATCH" method="post" novalidate class="form-validation">
                 <div class="mb-3">
                     <label class="form-label" for="title">Enter Title</label>
                     <input class="form-control" type="text" required id="title" placeholder="Enter Name"
                         name="camp[title]" value="<%= camp.title %>">
+                    <div class="valid-feedback">
+                        Looks good!
+                    </div>
                 </div>
                 <div class="row">
                     <div class="col-lg-7 col-md-12 mb-3">
                         <label class="form-label" for="location">Enter Location</label>
                         <input class="form-control" type="text" required id="location" placeholder="Enter Location"
                             name="camp[location]" value="<%= camp.location %>">
+                        <div class="valid-feedback">
+                            Looks good!
+                        </div>
                     </div>
                     <div class="col-lg-5 col-md-12 mb-3">
                         <label class="form-label" for="price">CampGround Price</label>
                         <div class="input-group">
                             <span class="input-group-text">$</span>
                             <input type="number" class="form-control" placeholder="0.00" name="camp[price]" id="price"
-                                value="<%= camp.price %>">
+                                value="<%= camp.price %>" required>
+                        </div>
+                        <div class="valid-feedback">
+                            Looks good!
                         </div>
                     </div>
                 </div>
@@ -32,11 +41,17 @@
                     <label class="form-label" for="image">Image URL</label>
                     <input class="form-control" type="text" required id="image" placeholder="Enter Image URL"
                         name="camp[image]" value="<%= camp.image %>">
+                    <div class="valid-feedback">
+                        Looks good!
+                    </div>
                 </div>
                 <div class="mb-3">
                     <label class="form-label" for="description">Enter Description</label>
                     <textarea class="form-control" type="text" id="description"
                         name="camp[description]"><%= camp.description %> </textarea>
+                    <div class="valid-feedback">
+                        Looks good!
+                    </div>
                 </div>
                 <div class="mb-3">
                     <button class="btn btn-primary" type="submit">Update</button>

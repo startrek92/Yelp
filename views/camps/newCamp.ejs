@@ -6,23 +6,33 @@
         </div>
         <h1 class="text-center">Add New Camp Ground</h1>
         <div class="col-6 offset-3">
-            <form action="/camps" method="post">
+            <form action="/camps" method="post" novalidate class="form-validation">
                 <div class="mb-3">
                     <label class="form-label" for="title">Enter Title</label>
                     <input class="form-control" type="text" required id="title" placeholder="Enter Name"
                         name="camp[title]">
+                    <div class="valid-feedback">
+                        Looks good!
+                    </div>
                 </div>
                 <div class="row">
                     <div class="col-lg-7 col-mg-12 mb-3">
                         <label class="form-label" for="location">Enter Location</label>
                         <input class="form-control" type="text" required id="location" placeholder="Enter Location"
                             name="camp[location]">
+                        <div class="valid-feedback">
+                            Looks good!
+                        </div>
                     </div>
                     <div class="col-lg-5 col-mg-12 mb-3">
                         <label class="form-label" for="price">CampGround Price</label>
                         <div class="input-group">
                             <span class="input-group-text">$</span>
-                            <input type="number" class="form-control" placeholder="0.00" name="camp[price]" id="price">
+                            <input type="number" class="form-control" placeholder="0.00" name="camp[price]" id="price"
+                                required>
+                        </div>
+                        <div class="valid-feedback">
+                            Looks good!
                         </div>
                     </div>
                 </div>
@@ -30,11 +40,17 @@
                     <label class="form-label" for="image">Image URL</label>
                     <input class="form-control" type="text" required id="image" placeholder="Enter Image URL"
                         name="camp[image]">
+                    <div class="valid-feedback">
+                        Looks good!
+                    </div>
                 </div>
                 <div class="mb-3">
                     <label class="form-label" for="description">Enter Description</label>
                     <textarea class="form-control" type="text" required id="description" placeholder="Enter Description"
                         name="camp[description]"></textarea>
+                    <div class="valid-feedback">
+                        Looks good!
+                    </div>
                 </div>
                 <div class="mb-3">
                     <button class="btn btn-primary" type="submit">Submit</button>

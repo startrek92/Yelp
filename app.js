@@ -3,9 +3,10 @@ const path = require('path');
 const methodOverride = require('method-override')
 const CampGround = require('./models/campGround');
 const ejsMate = require('ejs-mate');
-const { campValidator } = require('./utils/schemaValidator');
+const { campValidator, reviewValidator } = require('./utils/schemaValidator');
 const CustomError = require('./utils/customError');
 const asyncErrorHandler = require('./utils/asyncErrorHandler');
+const Review = require('./models/reviewSchema');
 
 // Connect DB
 const mongoose = require('mongoose');
@@ -39,6 +40,16 @@ app.use(methodOverride('_method'));
 
 const validateCampData = (req, res, next) => {
     const { error } = campValidator.validate(req.body);
+    if (error) {
+        const msg = error.details.map(e => e.message).join(',');
+        throw next(new CustomError(msg, 400));
+    } else {
+        next();
+    }
+}
+
+const validateReview = (req, res, next) => {
+    const { error } = reviewValidator.validate(req.body);
     if (error) {
         const msg = error.details.map(e => e.message).join(',');
         throw next(new CustomError(msg, 400));
@@ -82,7 +93,8 @@ app.get('/camps/:id/edit', asyncErrorHandler(async (req, res) => {
 
 app.get('/camps/:id', asyncErrorHandler(async (req, res) => {
     const { id } = req.params;
-    const camp = await CampGround.findById(id);
+    const camp = await CampGround.findById(id).populate('reviews');
+    // console.log(camp);
     res.render('./camps/view', { camp });
 }))
 
@@ -101,8 +113,26 @@ app.patch('/camps/:id', validateCampData, asyncErrorHandler(async (req, res, nex
 app.delete('/camps/:id', asyncErrorHandler(async (req, res) => {
     const { id } = req.params;
     const deletedCamp = await CampGround.findByIdAndDelete(id);
-    console.log(deletedCamp);
+    // console.log(deletedCamp);
     res.redirect('/camps');
+}))
+
+app.post('/camps/:id/reviews', validateReview, asyncErrorHandler(async (req, res) => {
+    const { id } = req.params;
+    const camp = await CampGround.findById(id);
+    const review = new Review(req.body.review);
+    camp.reviews.push(review);
+    await review.save();
+    await camp.save();
+    // console.log(review);
+    res.redirect(`/camps/${id}`);
+}))
+
+app.delete('/camps/:id/reviews/:reviewId', asyncErrorHandler(async (req, res) => {
+    const { id, reviewId } = req.params;
+    const camp = await CampGround.findByIdAndUpdate(id, { $pull: { reviews: reviewId } });
+    const review = await Review.findByIdAndDelete(reviewId);
+    res.redirect(`/camps/${id}`);
 }))
 
 app.all('*', (req, res, next) => {

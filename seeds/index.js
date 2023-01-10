@@ -4,6 +4,7 @@
 const CampGround = require('../models/campGround');
 const cities = require('./cities');
 const { descriptors, places } = require('./seedHelpers');
+const Review = require('../models/reviewSchema');
 
 const mongoose = require('mongoose');
 mongoose.connect('mongodb://127.0.0.1:27017/yelp-camp', { useNewUrlParser: true, })
@@ -17,6 +18,7 @@ mongoose.connect('mongodb://127.0.0.1:27017/yelp-camp', { useNewUrlParser: true,
 
 const seedDB = async () => {
     await CampGround.deleteMany({}); // deletes all data from DB
+    await Review.deleteMany({});
 
     // Random Data in DB
     for (let i = 0; i < 50; ++i) {
