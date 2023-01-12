@@ -6,10 +6,16 @@ const ejsMate = require('ejs-mate');
 const { campValidator, reviewValidator } = require('./utils/schemaValidator');
 const CustomError = require('./utils/customError');
 const asyncErrorHandler = require('./utils/asyncErrorHandler');
-const Review = require('./models/reviewSchema');
+
+const campground = require('./routes/campground');
+const review = require('./routes/review');
+
+const session = require('express-session');
+const flash = require('express-flash');
 
 // Connect DB
 const mongoose = require('mongoose');
+mongoose.set('strictQuery', false);
 mongoose.connect('mongodb://127.0.0.1:27017/yelp-camp', { useNewUrlParser: true, })
     .then(() => {
         console.log("Connected to MongoDB")
@@ -33,106 +39,37 @@ app.use(express.json());
 app.set('view engine', 'ejs');
 app.set('views'), path.join(__dirname, '/views')
 
+const sessionConfig = {
+    secret : "SecretKey",
+    resave: false,
+    saveUninitialized: true,
+    cookie: { 
+        httpOnly : true,
+     }
+}
+
+app.use(session(sessionConfig));
+app.use(flash());
+
 
 
 // allow forms to send PUT DELETE HTTP Request
 app.use(methodOverride('_method'));
 
-const validateCampData = (req, res, next) => {
-    const { error } = campValidator.validate(req.body);
-    if (error) {
-        const msg = error.details.map(e => e.message).join(',');
-        throw next(new CustomError(msg, 400));
-    } else {
-        next();
-    }
-}
+app.use((req, res, next) => {
+    res.locals.success = req.flash('success');
+    res.locals.error = req.flash('error');
+    next();
+})
 
-const validateReview = (req, res, next) => {
-    const { error } = reviewValidator.validate(req.body);
-    if (error) {
-        const msg = error.details.map(e => e.message).join(',');
-        throw next(new CustomError(msg, 400));
-    } else {
-        next();
-    }
-}
+app.use('/camps', campground);
+app.use('/camps/:id/reviews', review);
+
+app.use(express.static(path.join(__dirname, 'public')));
 
 
 app.get('/', ((req, res) => {
     res.render('./home');
-}))
-
-app.get('/camps', asyncErrorHandler(async (req, res) => {
-    const camps = await CampGround.find({});
-    // console.log(camps);
-    res.render('./camps/index', { camps });
-}))
-
-//remember to add names in input ejs template
-app.post('/camps', validateCampData, asyncErrorHandler(async (req, res) => {
-    const data = req.body;
-    // console.log(`POST /camps ${data}`);
-    const newCamp = new CampGround(req.body.camp);
-    await newCamp.save();
-    // console.log(newCamp);
-    res.redirect(`/camps/${newCamp._id}`);
-    // res.send('Camp Data Validation Successful')
-}))
-
-app.get('/camps/new', ((req, res) => {
-    res.render('./camps/newCamp');
-}))
-
-app.get('/camps/:id/edit', asyncErrorHandler(async (req, res) => {
-    const { id } = req.params;
-    const camp = await CampGround.findById(id);
-    console.log(camp);
-    res.render('./camps/edit', { camp });
-}))
-
-app.get('/camps/:id', asyncErrorHandler(async (req, res) => {
-    const { id } = req.params;
-    const camp = await CampGround.findById(id).populate('reviews');
-    // console.log(camp);
-    res.render('./camps/view', { camp });
-}))
-
-app.patch('/camps/:id', validateCampData, asyncErrorHandler(async (req, res, next) => {
-    // console.log('/PATCH Request');
-    // console.log(req);
-    const { id } = req.params;
-    const camp = await CampGround.findByIdAndUpdate(id, req.body.camp);
-    if (!camp) {
-        next(new CustomError(`Camp Not Found. ID - ${id}`, 400));
-    } else {
-        res.redirect(`/camps/${camp._id}`);
-    }
-}))
-
-app.delete('/camps/:id', asyncErrorHandler(async (req, res) => {
-    const { id } = req.params;
-    const deletedCamp = await CampGround.findByIdAndDelete(id);
-    // console.log(deletedCamp);
-    res.redirect('/camps');
-}))
-
-app.post('/camps/:id/reviews', validateReview, asyncErrorHandler(async (req, res) => {
-    const { id } = req.params;
-    const camp = await CampGround.findById(id);
-    const review = new Review(req.body.review);
-    camp.reviews.push(review);
-    await review.save();
-    await camp.save();
-    // console.log(review);
-    res.redirect(`/camps/${id}`);
-}))
-
-app.delete('/camps/:id/reviews/:reviewId', asyncErrorHandler(async (req, res) => {
-    const { id, reviewId } = req.params;
-    const camp = await CampGround.findByIdAndUpdate(id, { $pull: { reviews: reviewId } });
-    const review = await Review.findByIdAndDelete(reviewId);
-    res.redirect(`/camps/${id}`);
 }))
 
 app.all('*', (req, res, next) => {
