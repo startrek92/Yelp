@@ -1,17 +1,21 @@
 const express = require('express');
 const path = require('path');
 const methodOverride = require('method-override')
-const CampGround = require('./models/campGround');
+const User = require('./models/user');
 const ejsMate = require('ejs-mate');
-const { campValidator, reviewValidator } = require('./utils/schemaValidator');
 const CustomError = require('./utils/customError');
-const asyncErrorHandler = require('./utils/asyncErrorHandler');
+
+var favicon = require('serve-favicon')
 
 const campground = require('./routes/campground');
 const review = require('./routes/review');
+const user = require('./routes/user');
 
 const session = require('express-session');
 const flash = require('express-flash');
+
+const localStrategy = require('passport-local');
+const passport = require('passport');
 
 // Connect DB
 const mongoose = require('mongoose');
@@ -40,32 +44,48 @@ app.set('view engine', 'ejs');
 app.set('views'), path.join(__dirname, '/views')
 
 const sessionConfig = {
-    secret : "SecretKey",
+    secret: "SecretKey",
     resave: false,
     saveUninitialized: true,
-    cookie: { 
-        httpOnly : true,
-     }
+    cookie: {
+        httpOnly: true,
+        expires: Date.now() + 1000 * 60 * 60 * 24 * 7,
+        maxAge: 1000 * 60 * 60 * 24 * 7
+    }
 }
 
 app.use(session(sessionConfig));
 app.use(flash());
 
+app.use(passport.initialize());
+app.use(passport.session());
+
+// authenticate static method added by plugin
+passport.use(new localStrategy(User.authenticate()));
+passport.serializeUser(User.serializeUser());
+passport.deserializeUser(User.deserializeUser());
 
 
 // allow forms to send PUT DELETE HTTP Request
 app.use(methodOverride('_method'));
 
 app.use((req, res, next) => {
+    
+    // implement return To
+    // req.session.returnTo = req.originalUrl;
+    // console.log(req.session);
+    res.locals.currentUser = req.user;
     res.locals.success = req.flash('success');
     res.locals.error = req.flash('error');
     next();
 })
 
+app.use('/', user);
 app.use('/camps', campground);
 app.use('/camps/:id/reviews', review);
 
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
 
 
 app.get('/', ((req, res) => {
@@ -77,8 +97,8 @@ app.all('*', (req, res, next) => {
 })
 
 app.use((err, req, res, next) => {
-    console.log('in error');
-    console.log(err);
+    // console.log('in error');
+    // console.log(err);
     const { message = 'Page Not Found', statusCode = 500 } = err;
     res.status(statusCode).render('./error', { err });
 })

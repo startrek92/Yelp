@@ -7,7 +7,7 @@ const { descriptors, places } = require('./seedHelpers');
 const Review = require('../models/reviewSchema');
 
 const mongoose = require('mongoose');
-mongoose.connect('mongodb://127.0.0.1:27017/yelp-camp', { useNewUrlParser: true, })
+mongoose.connect('mongodb://127.0.0.1:27017/yelp-camp', { useNewUrlParser: true })
     .then(() => {
         console.log("Connected to MongoDB")
     })
@@ -22,6 +22,12 @@ const seedDB = async () => {
 
     // Random Data in DB
     for (let i = 0; i < 50; ++i) {
+        const fakeReview = new Review({
+            body: 'This is fake Review',
+            rating: 3,
+            author: '63c0e28b5b48aebe1be2714f'
+        });
+        const savedReview = await fakeReview.save();
         const desc = `Lorem, ipsum dolor sit amet consectetur adipisicing elit. Cumque repellat itaque quis! Soluta expedita eveniet esse, blanditiis adipisci, a odit delectus non asperiores pariatur facilis quam voluptas, quasi et sunt. Praesentium, saepe. Sed odit fuga harum, dolorum quibusdam asperiores molestiae enim in blanditiis architecto quo iste. Asperiores iste itaque tempore, alias sequi facilis velit molestias, cupiditate corporis vitae quia sunt!`;
         const name1 = Math.floor(Math.random() * places.length);
         const name2 = Math.floor(Math.random() * descriptors.length);
@@ -33,7 +39,9 @@ const seedDB = async () => {
             price: price,
             description: desc,
             location: `${cities[loc].city}, ${cities[loc].state}`,
-            image: `https://picsum.photos/300`
+            image: `https://picsum.photos/300`,
+            author: '63c0e28b5b48aebe1be2714f',
+            reviews: savedReview._id
         })
         await camp.save();
     }

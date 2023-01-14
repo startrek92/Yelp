@@ -1,0 +1,27 @@
+<% layout('./layouts/template') %>
+    <h1 class="text-center">Login</h1>
+    <div class="col-6 offset-3">
+        <form action="/login" method="post" novalidate class="form-validation">
+            <div class="mb-3">
+                <label class="form-label" for="username">Username</label>
+                <input class="form-control" type="text" required id="username" placeholder="Username" name="username">
+                <div class="valid-feedback">
+                    Looks good!
+                </div>
+            </div>
+            <div class="mb-3">
+                <label class="form-label" for="password">Password</label>
+                <input class="form-control" type="password" required id="password" placeholder="Password"
+                    name="password">
+                <div class="valid-feedback">
+                    Looks good!
+                </div>
+            </div>
+            <div class="mb-3">
+                <button class="btn btn-primary" type="submit">Login</button>
+            </div>
+        </form>
+        <form action="/camps" method="GET">
+
+        </form>
+    </div>

@@ -1,0 +1,37 @@
+<% layout('./layouts/template') %>
+    <h1 class="text-center">Register</h1>
+    <div class="col-6 offset-3">
+        <form action="/register" method="post" novalidate class="form-validation">
+            <div class="mb-3">
+                <label class="form-label" for="username">Username</label>
+                <input class="form-control" type="text" required id="username" placeholder="Username"
+                    name="user[username]">
+                <div class="valid-feedback">
+                    Looks good!
+                </div>
+            </div>
+            <div class="mb-3">
+                <label class="form-label" for="email">Email</label>
+                <input class="form-control" type="email" required id="email" placeholder="Email"
+                    name="user[email]">
+                <div class="valid-feedback">
+                    Looks good!
+                </div>
+            </div>
+            <div class="mb-3">
+                <label class="form-label" for="password">Password</label>
+                <input class="form-control" type="password" required id="password" placeholder="Password"
+                    name="user[password]">
+                <div class="valid-feedback">
+                    Looks good!
+                </div>
+            </div>
+            <div class="mb-3">
+                <button class="btn btn-primary" type="submit">Submit</button>
+                <a href="/camps" class="btn btn-danger mx-2">Cancel </a>
+            </div>
+        </form>
+        <form action="/camps" method="GET">
+           
+        </form>
+    </div>

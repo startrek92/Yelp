@@ -1,8 +1,9 @@
 <% layout('./layouts/template') %>
+    <link rel="stylesheet" href="/stylesheet/star.css">
     <div class="row mb-3">
         <div class="col-6">
             <div class="card">
-                <img class="card-img-top" src="<%= camp.image %> " alt="Card image cap">
+                <img class="card-img-top" src="<%=camp.image %> " alt="">
                 <div class="card-body">
                     <h5 class="card-title">
                         <%= camp.title %>
@@ -16,53 +17,84 @@
                         <%= camp.location %>
                     </li>
                     <li class="list-group-item">$<%= camp.price %>/Night</li>
+                    <li class="list-group-item">Added by
+                        <%= camp.author.username %>
+                    </li>
                 </ul>
                 <div class="card-footer text-muted">
                     2 days ago
                 </div>
                 <div class="card-body">
-                    <form class="d-inline" action="/camps/<%= camp._id %>?_method=DELETE" method="POST">
-                        <button class="btn btn-danger" type="submit">Delete</button>
-                    </form>
-                    <a href="/camps/<%= camp._id%>/edit" class="btn btn-info mx-2">Update</a>
-                    <a href="/camps" class="btn btn-success">All Camps</a>
+                    <% if(currentUser && camp.author.equals(currentUser._id)) { %>
+                        <form class="d-inline" action="/camps/<%= camp._id %>?_method=DELETE" method="POST">
+                            <button class="btn btn-danger" type="submit">Delete</button>
+                        </form>
+                        <a href="/camps/<%= camp._id%>/edit" class="btn btn-info mx-2">Update</a>
+                        <% } %>
+                            <a href="/camps" class="btn btn-success">All Camps</a>
                 </div>
             </div>
         </div>
         <div class="col-6">
-            <div class="row my-4">
-                <h3>Leave a Review</h3>
-                <form action="/camps/<%= camp._id %>/reviews" method="POST">
-                    <div class="form-group mb-3">
-                        <label class="form-label" for="rating">Rating</label>
-                        <input type="range" class="form-range" min="1" max="5" step="1" id="rating"
-                            name="review[rating]">
-                        <label class="form-label" for="review">Review</label>
-                        <textarea class="form-control" rows="4" id="review" name="review[body]"></textarea>
-                    </div>
-                    <button class="btn btn-success">Submit</button>
-                </form>
-            </div>
-            <div>
-                <% if (camp.reviews.length) {%>
-                    <h3>Reviews</h3>
-                    <% } %>
-                        <% for(review of camp.reviews) { %>
-                            <div class="card mb-4">
-                                <div class="card-body">
-                                    <h6 class="card-subtitle mb-2">
-                                        <%= review.rating %>
-                                    </h6>
-                                    <p class="card-text">
-                                        <%= review.body %>
-                                    </p>
-                                    <form action="/camps/<%= camp._id%>/reviews/<%= review._id%>?_method=DELETE"
-                                        method="POST">
-                                        <button class="btn btn-sm btn-danger">Delete</button>
-                                    </form>
-                                </div>
+            <% if(currentUser) { %>
+                <div class="row my-4">
+                    <h5>Leave a review</h5>
+                    <form action="/camps/<%= camp._id %>/reviews" method="POST">
+                        <div class="form-group mb-3">
+                            <!-- <label class="form-label" for="rating">Rating</label>
+                            <input type="range" class="form-range" min="1" max="5" step="1" id="rating"
+                                name="review[rating]"> -->
+                            <div class="div mb-1">
+                                <fieldset class="starability-basic">
+                                    <input type="radio" id="no-rate" class="input-no-rate" name="review[rating]" value="1"
+                                        checked aria-label="No rating." />
+                                    <input type="radio" id="first-rate1" name="review[rating]" value="1" />
+                                    <label for="first-rate1" title="Terrible">1 star</label>
+                                    <input type="radio" id="first-rate2" name="review[rating]" value="2" />
+                                    <label for="first-rate2" title="Not good">2 stars</label>
+                                    <input type="radio" id="first-rate3" name="review[rating]" value="3" />
+                                    <label for="first-rate3" title="Average">3 stars</label>
+                                    <input type="radio" id="first-rate4" name="review[rating]" value="4" />
+                                    <label for="first-rate4" title="Very good">4 stars</label>
+                                    <input type="radio" id="first-rate5" name="review[rating]" value="5" />
+                                    <label for="first-rate5" title="Amazing">5 stars</label>
+                                </fieldset>
                             </div>
-                            <% } %>
-            </div>
+                            <label class="form-label" for="review">Review Text</label>
+                            <textarea class="form-control" rows="5" id="review" name="review[body]"></textarea>
+                        </div>
+                        <button class="btn btn-success">Submit</button>
+                    </form>
+                </div>
+                <% } else { %>
+                    <a href="/login" class="text-danger">Login to post review</a>
+                    <% } %>
+                        <div>
+                            <% if (camp.reviews.length) {%>
+                                <h3>Reviews</h3>
+                                <% } %>
+                                    <% for(review of camp.reviews) { %>
+                                        <div class="card mb-4">
+                                            <div class="card-body">
+                                                <p class="starability-result" data-rating="<%= review.rating %>">
+                                                    Rated: <%= review.rating %> stars
+                                                </p>
+                                                <p class="card-text">
+                                                    <%= review.body %>
+                                                </p>
+                                                <p class="card-text text-muted" style="text-align:right;">
+                                                    - <%= review.author.username %>
+                                                </p>
+                                                <% if(currentUser && currentUser._id.equals(review.author._id)) { %>
+                                                    <form
+                                                        action="/camps/<%= camp._id%>/reviews/<%= review._id%>?_method=DELETE"
+                                                        method="POST">
+                                                        <button class="btn btn-sm btn-danger">Delete</button>
+                                                    </form>
+                                                    <% } %>
+                                            </div>
+                                        </div>
+                                        <% } %>
+                        </div>
         </div>
     </div>
