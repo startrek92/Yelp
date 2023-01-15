@@ -3,6 +3,9 @@ const Review = require('./models/reviewSchema');
 const { campValidator, reviewValidator } = require('./utils/schemaValidator');
 const CustomError = require('./utils/customError');
 const asyncErrorHandler = require('./utils/asyncErrorHandler');
+const { storage } = require('./cloudinary');
+const multer = require('multer');
+const uploads = multer({ storage });
 
 module.exports.isLoggedIn = (req, res, next) => {
     if (!req.isAuthenticated()) {
@@ -50,4 +53,14 @@ module.exports.validateReview = (req, res, next) => {
     } else {
         next();
     }
+}
+
+module.exports.uploadUtil = async (req, res, next) => {
+    const uploadResult = await uploads.array('image');
+    console.log('uploading images')
+    console.log(req);
+    const imgArray = req.files.map(fl => ({ url: fl.path, name: fl.name }));
+    req.body.camp.image = imgArray;
+    console.log(req.body);
+    next();
 }

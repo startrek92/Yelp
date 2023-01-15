@@ -1,3 +1,6 @@
+if (process.env.NODE_ENV !== 'production') {
+    require('dotenv').config();
+}
 const express = require('express');
 const path = require('path');
 const methodOverride = require('method-override')
@@ -16,6 +19,7 @@ const flash = require('express-flash');
 
 const localStrategy = require('passport-local');
 const passport = require('passport');
+
 
 // Connect DB
 const mongoose = require('mongoose');
@@ -70,7 +74,7 @@ passport.deserializeUser(User.deserializeUser());
 app.use(methodOverride('_method'));
 
 app.use((req, res, next) => {
-    
+
     // implement return To
     // req.session.returnTo = req.originalUrl;
     // console.log(req.session);
@@ -97,8 +101,8 @@ app.all('*', (req, res, next) => {
 })
 
 app.use((err, req, res, next) => {
-    // console.log('in error');
-    // console.log(err);
+    console.log('in error');
+    console.log(err);
     const { message = 'Page Not Found', statusCode = 500 } = err;
     res.status(statusCode).render('./error', { err });
 })

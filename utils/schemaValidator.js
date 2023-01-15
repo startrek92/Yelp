@@ -5,8 +5,9 @@ const campValidator = Joi.object({
         price: Joi.number().min(0).required(),
         location: Joi.string().required(),
         description: Joi.string().required(),
-        image: Joi.string().required()
-    }).required()
+        // image: Joi.array().required()
+    }).required(),
+    deleteImage:Joi.array()
 });
 
 module.exports.campValidator = campValidator;

@@ -21,7 +21,7 @@ const seedDB = async () => {
     await Review.deleteMany({});
 
     // Random Data in DB
-    for (let i = 0; i < 50; ++i) {
+    for (let i = 0; i < 10; ++i) {
         const fakeReview = new Review({
             body: 'This is fake Review',
             rating: 3,
@@ -39,7 +39,16 @@ const seedDB = async () => {
             price: price,
             description: desc,
             location: `${cities[loc].city}, ${cities[loc].state}`,
-            image: `https://picsum.photos/300`,
+            image: [
+                {
+                    url: 'https://res.cloudinary.com/ddtvy9vcy/image/upload/v1673797645/YelpCamp/ulns4f9bj9xeyzvpjn48.jpg',
+                    fileName: 'YelpCamp/ulns4f9bj9xeyzvpjn48'
+                },
+                {
+                    url: 'https://res.cloudinary.com/ddtvy9vcy/image/upload/v1673797653/YelpCamp/mdxoiocmldhordwbnx70.jpg',
+                    fileName: 'YelpCamp/mdxoiocmldhordwbnx70'
+                }
+            ],
             author: '63c0e28b5b48aebe1be2714f',
             reviews: savedReview._id
         })

@@ -1,5 +1,6 @@
 (function () {
     'use strict'
+    bsCustomFileInput.init();
     console.log("Script Running");
     var forms = document.querySelectorAll('.form-validation')
     Array.prototype.slice.call(forms)

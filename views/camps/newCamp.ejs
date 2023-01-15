@@ -1,12 +1,8 @@
 <% layout('./layouts/template') %>
     <div class="row">
-        <div class="alert alert-warning" role="alert">
-            This is test app. Use valid image URL.
-            Ex:https://picsum.photos/300
-        </div>
         <h1 class="text-center">Add New Camp Ground</h1>
         <div class="col-6 offset-3">
-            <form action="/camps" method="post" novalidate class="form-validation">
+            <form action="/camps" method="post" novalidate class="form-validation" enctype="multipart/form-data">
                 <div class="mb-3">
                     <label class="form-label" for="title">Enter Title</label>
                     <input class="form-control" type="text" required id="title" placeholder="Enter Name"
@@ -37,14 +33,6 @@
                     </div>
                 </div>
                 <div class="mb-3">
-                    <label class="form-label" for="image">Image URL</label>
-                    <input class="form-control" type="text" required id="image" placeholder="Enter Image URL"
-                        name="camp[image]">
-                    <div class="valid-feedback">
-                        Looks good!
-                    </div>
-                </div>
-                <div class="mb-3">
                     <label class="form-label" for="description">Enter Description</label>
                     <textarea class="form-control" type="text" required id="description" placeholder="Enter Description"
                         name="camp[description]"></textarea>
@@ -52,12 +40,20 @@
                         Looks good!
                     </div>
                 </div>
+                <div class="form-file custom-file">
+                    <input type="file" class="form-file-input" id="image" name="image" multiple>
+                    <label class="form-file-label" for="image">
+                        <span class="form-file-text custom-file-label">Choose image(s)...</span>
+                        <span class="form-file-button">Browse</span>
+                    </label>
+                </div>
                 <div class="mb-3">
                     <button class="btn btn-primary" type="submit">Submit</button>
                     <a href="/camps" class="btn btn-danger mx-2">Cancel</a>
                 </div>
             </form>
         </div>
+    </div>
     </div>
     </body>
 
