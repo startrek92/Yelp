@@ -104,6 +104,8 @@ app.use(
     }),
 );
 
+console.log('Db URL',dbUrl);
+
 // setting view engine as EJS
 app.set('view engine', 'ejs');
 app.set('views'), path.join(__dirname, '/views');
