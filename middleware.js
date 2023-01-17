@@ -7,6 +7,7 @@ const { storage } = require('./cloudinary');
 const multer = require('multer');
 const uploads = multer({ storage });
 
+
 module.exports.isLoggedIn = (req, res, next) => {
     if (!req.isAuthenticated()) {
         req.session.returnTo = req.originalUrl

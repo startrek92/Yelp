@@ -21,7 +21,7 @@ const seedDB = async () => {
     await Review.deleteMany({});
 
     // Random Data in DB
-    for (let i = 0; i < 10; ++i) {
+    for (let i = 0; i < 500; ++i) {
         const fakeReview = new Review({
             body: 'This is fake Review',
             rating: 3,
@@ -33,22 +33,30 @@ const seedDB = async () => {
         const name2 = Math.floor(Math.random() * descriptors.length);
         const price = Math.floor(Math.random() * 100) + 100;
         const campName = `${descriptors[name2]}-${places[name1]}`;
-        const loc = Math.floor(Math.random() * 1000);
+        const randomCityIndex = Math.floor(Math.random() * cities.length);
         const camp = new CampGround({
             title: campName,
             price: price,
             description: desc,
-            location: `${cities[loc].city}, ${cities[loc].state}`,
+            location: `${cities[randomCityIndex].city}, ${cities[randomCityIndex].state}`,
             image: [
                 {
-                    url: 'https://res.cloudinary.com/ddtvy9vcy/image/upload/v1673797645/YelpCamp/ulns4f9bj9xeyzvpjn48.jpg',
-                    fileName: 'YelpCamp/ulns4f9bj9xeyzvpjn48'
-                },
-                {
-                    url: 'https://res.cloudinary.com/ddtvy9vcy/image/upload/v1673797653/YelpCamp/mdxoiocmldhordwbnx70.jpg',
-                    fileName: 'YelpCamp/mdxoiocmldhordwbnx70'
-                }
+                    url: 'https://res.cloudinary.com/ddtvy9vcy/image/upload/v1673872810/YelpCamp/cckejhal5nyxtmy7mn5t.jpg',
+                    fileName: 'YelpCamp/cckejhal5nyxtmy7mn5t',
+                  },
+                  {
+                    url: 'https://res.cloudinary.com/ddtvy9vcy/image/upload/v1673872827/YelpCamp/vs1olvfh0iexkwxpmd73.jpg',
+                    fileName: 'YelpCamp/vs1olvfh0iexkwxpmd73',
+                  }
             ],
+            geometry:
+            {
+                type: 'Point',
+                coordinates: [
+                    cities[randomCityIndex].longitude,
+                    cities[randomCityIndex].latitude
+                ]
+            },
             author: '63c0e28b5b48aebe1be2714f',
             reviews: savedReview._id
         })

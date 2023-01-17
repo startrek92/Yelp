@@ -25,15 +25,14 @@ module.exports.addUser = async (req, res, next) => {
 }
 
 module.exports.loginForm = (req, res) => {
-    console.log(req.session);
     res.render('./user/login');
 }
 
 module.exports.loginUser = async (req, res) => {
-    console.log(req.session);
+    // console.log(req.session);
     const redirectUrl = req.session.returnTo || '/';
     delete req.session.returnTo;
-    console.log(redirectUrl);
+    // console.log(redirectUrl);
     req.flash('success', `Welcome back ${req.body.username}`);
     res.redirect(redirectUrl);
 }

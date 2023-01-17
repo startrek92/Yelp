@@ -14,7 +14,6 @@ router.route('/')
     .post(isLoggedIn, uploads.array('image'), validateCampData, asyncErrorHandler(campController.addNewCamp));
 
 router.get('/new', isLoggedIn, (campController.newCampForm));
-// router.get('/new', (campController.newCampForm));
 
 router.route('/:id')
     .get(asyncErrorHandler(campController.viewCamp))

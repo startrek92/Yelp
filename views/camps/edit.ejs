@@ -8,18 +8,12 @@
                     <label class="form-label" for="title">Enter Title</label>
                     <input class="form-control" type="text" required id="title" placeholder="Enter Name"
                         name="camp[title]" value="<%= camp.title %>">
-                    <div class="valid-feedback">
-                        Looks good!
-                    </div>
                 </div>
                 <div class="row">
                     <div class="col-lg-7 col-md-12 mb-3">
                         <label class="form-label" for="location">Enter Location</label>
                         <input class="form-control" type="text" required id="location" placeholder="Enter Location"
                             name="camp[location]" value="<%= camp.location %>">
-                        <div class="valid-feedback">
-                            Looks good!
-                        </div>
                     </div>
                     <div class="col-lg-5 col-md-12 mb-3">
                         <label class="form-label" for="price">CampGround Price</label>
@@ -28,18 +22,12 @@
                             <input type="number" class="form-control" placeholder="0.00" name="camp[price]" id="price"
                                 value="<%= camp.price %>" required>
                         </div>
-                        <div class="valid-feedback">
-                            Looks good!
-                        </div>
                     </div>
                 </div>
                 <div class="mb-3">
                     <label class="form-label" for="description">Enter Description</label>
                     <textarea class="form-control" type="text" id="description"
                         name="camp[description]"><%= camp.description %> </textarea>
-                    <div class="valid-feedback">
-                        Looks good!
-                    </div>
                 </div>
                 <div class="mb-3">
                     <label for="formFileMultiple" class="form-label">Add More Images</label>
