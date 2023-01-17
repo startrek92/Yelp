@@ -48,6 +48,8 @@ app.engine('ejs', ejsMate);
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
+app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
+
 const scriptSrcUrls = [
     "https://stackpath.bootstrapcdn.com/",
     "https://api.tiles.mapbox.com/",
@@ -157,7 +159,6 @@ app.use('/camps', campground);
 app.use('/camps/:id/reviews', review);
 
 app.use(express.static(path.join(__dirname, 'public')));
-app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
 
 
 app.get('/', ((req, res) => {
